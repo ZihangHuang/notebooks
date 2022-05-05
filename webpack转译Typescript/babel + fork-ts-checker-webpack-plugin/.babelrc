@@ -7,7 +7,7 @@
       }
     ],
     "@babel/preset-react",
-    "@babel/preset-typescript"
+    "@babel/preset-typescript" // 编译 ts 文件
   ],
   "plugins": [
     ["@babel/plugin-proposal-decorators", { "legacy": true }],

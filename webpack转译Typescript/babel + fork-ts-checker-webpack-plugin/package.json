@@ -1,5 +1,5 @@
 {
-  "name": "",
+  "name": "babel+fork-ts-checker-webpack-plugin",
   "version": "1.0.0",
   "description": "",
   "devDependencies": {
@@ -28,5 +28,5 @@
   },
   "browserslist": [
    
-  ],
+  ]
 }
