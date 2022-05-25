@@ -1,6 +1,6 @@
 ### 并发控制
 
-- 并行n个，n个结束后才会执行以后的
+- 并行 n 个，n 个结束后才会执行以后的
 
 ```javascript
 function myfetch(url) {
@@ -89,7 +89,7 @@ const callback = () => {
  */
 
 function deepClone(obj = {}, map = new Map()) {
-  if (typeof obj !== "object") {
+  if (typeof obj !== 'object') {
     return obj;
   }
   if (map.get(obj)) {
@@ -100,13 +100,13 @@ function deepClone(obj = {}, map = new Map()) {
   if (
     obj instanceof Array ||
     // 加 || 的原因是为了防止 Array 的 prototype 被重写，Array.isArray 也是如此
-    Object.prototype.toString(obj) === "[object Array]"
+    Object.prototype.toString(obj) === '[object Array]'
   ) {
     result = [];
   }
   // 防止循环引用
   map.set(obj, result);
-  
+
   for (const key in obj) {
     if (obj.hasOwnProperty(key)) {
       result[key] = deepClone(obj[key], map);
@@ -117,14 +117,14 @@ function deepClone(obj = {}, map = new Map()) {
 }
 ```
 
-### Promise的基础实现
+### Promise 的基础实现
 
 ```typescript
 type MyPromiseCb = (resolve?: Function, reject?: Function) => any;
 
 class MyPromise {
-  private status: "pending" | "fullfilled" | "rejected" = "pending";
-  private value: any = ""; // 保存resolve或者reject的值
+  private status: 'pending' | 'fullfilled' | 'rejected' = 'pending';
+  private value: any = ''; // 保存resolve或者reject的值
   private handlers: Function[] = [];
   private errorHandlers: Function[] = [];
 
@@ -139,7 +139,7 @@ class MyPromise {
       handler(...args);
     }
 
-    this.status = "fullfilled";
+    this.status = 'fullfilled';
   }
 
   reject(...args) {
@@ -148,16 +148,16 @@ class MyPromise {
     while ((handler = this.errorHandlers.shift())) {
       handler(...args);
     }
-    this.status = "rejected";
+    this.status = 'rejected';
   }
 
   then(onFulfilled?: any, onRejected?: any) {
     const t = this;
 
-    return new MyPromise(function(onFulfilledNext, onRejectedNext) {
-      let fulfilled = val => {
+    return new MyPromise(function (onFulfilledNext, onRejectedNext) {
+      let fulfilled = (val) => {
         try {
-          if (typeof onFulfilled !== "function") {
+          if (typeof onFulfilled !== 'function') {
             onFulfilledNext(val);
           } else {
             let res = onFulfilled(val);
@@ -175,9 +175,9 @@ class MyPromise {
         }
       };
 
-      let rejected = err => {
+      let rejected = (err) => {
         try {
-          if (typeof onRejected !== "function") {
+          if (typeof onRejected !== 'function') {
             onRejectedNext(err);
           } else {
             let res = onRejected(err);
@@ -195,17 +195,17 @@ class MyPromise {
       };
 
       switch (t.status) {
-        case "pending":
+        case 'pending':
           t.handlers.push(fulfilled);
           t.errorHandlers.push(rejected);
 
           break;
 
-        case "fullfilled":
+        case 'fullfilled':
           onFulfilled(...t.value);
           break;
 
-        case "rejected":
+        case 'rejected':
           onRejected(...t.value);
           break;
       }
@@ -218,11 +218,11 @@ class MyPromise {
 
   finally(callback?: any) {
     return this.then(
-      value => {
+      (value) => {
         callback();
         return value; // 和es6的Promise一样，返回resolve的参数
       },
-      reason => {
+      (reason) => {
         callback();
         throw reason; // 抛出错误，让catch可以捕获
       }
@@ -231,8 +231,8 @@ class MyPromise {
 
   static race(promises: MyPromise[]) {
     return new MyPromise((resolve, reject) => {
-      promises.forEach(promise => {
-        promise.then(resolve, reject).catch(err => reject(err));
+      promises.forEach((promise) => {
+        promise.then(resolve, reject).catch((err) => reject(err));
       });
     });
   }
@@ -243,81 +243,94 @@ class MyPromise {
       let res = [];
       let index = 0;
       promises.forEach((p, i) => {
-        p.then(r => {
+        p.then((r) => {
           res[i] = r;
-          index++
+          index++;
           if (index === len) {
             resolve(res);
           }
-        }, reject).catch(err => reject(err));
+        }, reject).catch((err) => reject(err));
       });
     });
   }
 }
 
 // 测试：
-const p1 = new MyPromise(resolve => setTimeout(resolve.bind(null, "resolved"), 2000));
-p1.then(res => res + " then").then((...args) => console.log("second", ...args));
+const p1 = new MyPromise((resolve) =>
+  setTimeout(resolve.bind(null, 'resolved'), 2000)
+);
+p1.then((res) => res + ' then').then((...args) =>
+  console.log('second', ...args)
+);
 // second resolved then
 
 // then返回MyPromise
-const p1_p = new MyPromise(resolve => setTimeout(resolve.bind(null, "resolved"), 2000));
-p1_p.then(res => new MyPromise((resolve) => {
-    resolve(res + " then")
-})).then((...args) => console.log("p1_p second", ...args));
+const p1_p = new MyPromise((resolve) =>
+  setTimeout(resolve.bind(null, 'resolved'), 2000)
+);
+p1_p
+  .then(
+    (res) =>
+      new MyPromise((resolve) => {
+        resolve(res + ' then');
+      })
+  )
+  .then((...args) => console.log('p1_p second', ...args));
 // p1_p second resolved then
 
-const p2 = new MyPromise((resolve, reject) => setTimeout(reject.bind(null, "rejected"), 2000));
-p2.then(res => res + " then")
+const p2 = new MyPromise((resolve, reject) =>
+  setTimeout(reject.bind(null, 'rejected'), 2000)
+);
+p2.then((res) => res + ' then')
   .catch((...args) => {
-    console.log("fail", ...args);
-    return "fail";
+    console.log('fail', ...args);
+    return 'fail';
   })
-  .then(res => console.log(res + " then2"));
+  .then((res) => console.log(res + ' then2'));
 // fail rejected
 // fail then2
 
-const p3 = new MyPromise(resolve => {
-  setTimeout(resolve.bind(null, "p3"), 1000);
+const p3 = new MyPromise((resolve) => {
+  setTimeout(resolve.bind(null, 'p3'), 1000);
 });
-const p4 = new MyPromise(resolve => {
-  setTimeout(resolve.bind(null, "p4"), 3000);
+const p4 = new MyPromise((resolve) => {
+  setTimeout(resolve.bind(null, 'p4'), 3000);
 });
-MyPromise.race([p3, p4]).then(res => {
-  console.log("promise race:", res);
+MyPromise.race([p3, p4]).then((res) => {
+  console.log('promise race:', res);
 });
 // promise race: p3
 
-const p5 = new MyPromise(resolve => {
-  setTimeout(resolve.bind(null, "p5"), 1000);
+const p5 = new MyPromise((resolve) => {
+  setTimeout(resolve.bind(null, 'p5'), 1000);
 });
-const p6 = new MyPromise(resolve => {
-  setTimeout(resolve.bind(null, "p6"), 3000);
+const p6 = new MyPromise((resolve) => {
+  setTimeout(resolve.bind(null, 'p6'), 3000);
 });
 MyPromise.all([p5, p6])
-  .then(res => {
-    console.log("promise all:", res);
+  .then((res) => {
+    console.log('promise all:', res);
   })
-  .catch(err => console.log("promise all error:", err));
+  .catch((err) => console.log('promise all error:', err));
 // promise all: ["p5", "p6"]
 
 const p7 = new MyPromise((resolve, reject) => {
-  setTimeout(resolve.bind(null, "p7"), 1000);
+  setTimeout(resolve.bind(null, 'p7'), 1000);
 });
 p7.finally(() => {
-  console.log("p7-finally"); // p7-finally
-}).then(res => {
+  console.log('p7-finally'); // p7-finally
+}).then((res) => {
   console.log(res);
 });
 // p7-finally
 // p7
 
 const p8 = new MyPromise((resolve, reject) => {
-  setTimeout(reject.bind(null, "p8-err"), 1000);
+  setTimeout(reject.bind(null, 'p8-err'), 1000);
 });
 p8.finally(() => {
-  console.log("p8-finally");
-}).catch(res => {
+  console.log('p8-finally');
+}).catch((res) => {
   console.log(res);
 });
 // p8-finally
@@ -325,18 +338,96 @@ p8.finally(() => {
 
 // 这里实现的能捕获到，但原生的不能捕获到，会吃掉错误，所以原生的promise要写catch
 try {
-    new MyPromise((resolve, reject) => {
-        throw new Error('err')
-    })
+  new MyPromise((resolve, reject) => {
+    throw new Error('err');
+  });
 } catch (e) {
-    console.error('捕获到了:',e) // 捕获到了: Error: err
+  console.error('捕获到了:', e); // 捕获到了: Error: err
 }
 
 try {
-    new Promise((resolve, reject) => {
-        throw new Error('err') // 报错：Uncaught (in promise)
-    })
+  new Promise((resolve, reject) => {
+    throw new Error('err'); // 报错：Uncaught (in promise)
+  });
 } catch (e) {
-    console.error('捕获到了:',e)
+  console.error('捕获到了:', e);
+}
+```
+
+### 斐波那契
+
+- 递归
+
+```javascript
+// 获取对应数字
+function fib(n) {
+  if (n === 1) {
+    return 1;
+  } else if (n === 0) {
+    return 0;
+  }
+  return fib(n - 1) + fib(n - 2);
+}
+
+// 获取数列
+function bobo(n, a = 0, b = 1, arr = [0]) {
+  if (n - 1 < 1) {
+    return arr;
+  }
+
+  arr.push(b);
+
+  n--;
+  return bobo(n, b, a + b, arr);
+}
+```
+
+- 循环
+
+```javascript
+function fib(n) {
+  let memo = [0, 1];
+  let i = 2;
+  while (i <= n) {
+    memo[i] = memo[i - 1] + memo[i - 2];
+    i++;
+  }
+
+  return memo[n];
+}
+
+function fib2(n) {
+  if (n == 0) {
+    return 0;
+  }
+  let a = 0; //  相当于 memo[i-2]
+  let b = 1; // 相当于 memo[i-1]
+  let sum = 0; // 相当于 memo[i]
+  let i = 2;
+
+  while (i <= n) {
+    sum = a + b;
+    a = b;
+    b = sum;
+    i++;
+  }
+
+  return sum;
+}
+
+function fib3(n) {
+  let a = 0; //  相当于 memo[i]
+  let b = 1; // 相当于 memo[i+1]
+  let sum = 0;
+  let i = 0;
+
+  while (i < n) {
+    sum = a + b;
+    a = b;
+    b = sum;
+    i++;
+  }
+
+  return a;
 }
 ```
