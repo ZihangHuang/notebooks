@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>图片懒加载Demo</title>
+    <style type="text/css">
+      img {
+        display: block;
+        height: 600px;
+      }
+    </style>
+  </head>
+  <body>
+    <div>
+      <img
+        src="https://cdn.pixabay.com/photo/2016/12/23/12/40/night-1927265__480.jpg"
+        alt="gg"
+        data-src="https://cdn.pixabay.com/photo/2016/12/23/12/40/night-1927265__480.jpg"
+      />
+      <img
+        src=""
+        alt="gg"
+        data-src="https://cdn.pixabay.com/photo/2016/12/23/12/40/night-1927265__480.jpg"
+      />
+      <img
+        src=""
+        alt="gg"
+        data-src="https://cdn.pixabay.com/photo/2016/12/23/12/40/night-1927265__480.jpg"
+      />
+      <img
+        src=""
+        alt="gg"
+        data-src="https://cdn.pixabay.com/photo/2016/12/23/12/40/night-1927265__480.jpg"
+      />
+      <img
+        src=""
+        alt="gg"
+        data-src="https://cdn.pixabay.com/photo/2016/12/23/12/40/night-1927265__480.jpg"
+      />
+      <img
+        src=""
+        alt="gg"
+        data-src="https://cdn.pixabay.com/photo/2016/12/23/12/40/night-1927265__480.jpg"
+      />
+      <img
+        src=""
+        alt="gg"
+        data-src="https://cdn.pixabay.com/photo/2016/12/23/12/40/night-1927265__480.jpg"
+      />
+    </div>
+
+    <script type="text/javascript">
+      const img = document.getElementsByTagName('img');
+      const height =
+        document.documentElement.clientHeight || document.body.clientHeight;
+      console.log('clientHeight', height);
+      for (let i = 0; i < img.length; i++) {
+        console.log(img[i].getBoundingClientRect().top);
+      }
+      window.onscroll = function () {
+        for (let i = 0; i < img.length; i++) {
+          if (img[i].getBoundingClientRect().top < height)
+            img[i].src = img[i].getAttribute('data-src');
+        }
+      };
+      window.onscroll();
+    </script>
+  </body>
+</html>
