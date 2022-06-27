@@ -1,4 +1,4 @@
-#### 组件双向绑定
+### 组件双向绑定
 
 - vue2
 
@@ -57,4 +57,52 @@ const isShow = computed({
 
 ```vue
 <my-component v-model="visible" />
+```
+
+### Vue3 + Typescript 配置 Eslint + Prettier
+
+安装：
+
+- @typescript-eslint/eslint-plugin
+- @typescript-eslint/parser
+- @vue/eslint-config-typescript
+- eslint
+- eslint-config-prettier
+- eslint-plugin-prettier
+- eslint-plugin-vue
+- vue-eslint-parser
+
+.eslintrc文件：
+
+```json
+{
+  "root": true,
+  "parser": "vue-eslint-parser",
+  "plugins": ["@typescript-eslint"],
+  "parserOptions": {
+    "parser": "@typescript-eslint/parser",
+    "ecmaVersion": 6,
+    "sourceType": "module",
+    "ecmaFeatures": {
+      "experimentalObjectRestSpread": true
+    },
+    "project": "./tsconfig.json",
+    "extraFileExtensions": [".vue"]
+  },
+  "env": {
+    "es6": true,
+    "browser": true,
+    "node": true,
+    "commonjs": true
+  },
+  "extends": [
+    // "eslint:recommended",
+    "@vue/typescript/recommended",
+    "plugin:vue/vue3-recommended",
+    "prettier",
+    "plugin:prettier/recommended"
+  ],
+  "rules": {}
+}
+
 ```
