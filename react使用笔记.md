@@ -37,7 +37,7 @@ export const reducer: React.Reducer<State, Action> = function (state, action) {
     case "SET_AGE":
       return {
         ...state,
-        age: action.age,
+        age: action.data,
       };
 
     default:
@@ -62,7 +62,7 @@ export default Store;
 ```typescript
 import React, { useReducer } from "react";
 import ReactDOM from "react-dom";
-import { State, Action, reducer, initialState } from "./reducer";
+import { reducer, initialState } from "./reducer";
 import Store from "./store";
 
 const App = () => {
@@ -98,5 +98,7 @@ const Child = () => {
       data: "tom",
     });
   };
+
+  return <div>Child</div>
 };
 ```
