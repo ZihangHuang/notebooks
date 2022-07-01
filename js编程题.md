@@ -431,3 +431,12 @@ function fib3(n) {
   return a;
 }
 ```
+
+### 数组变扁平
+
+```javascript
+function flat(arr) {
+  return Array.isArray(arr) ? [].concat(...arr.map(flat)) : arr;
+}
+
+```

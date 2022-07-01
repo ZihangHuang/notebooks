@@ -54,6 +54,19 @@ JavaScript 用 Number 类型标识数字，使用 IEEE754 标准，通过 64 位
 
 总结：精度损失可能出现在进制转化和对阶运算过程中。本质是 二进制模拟十进制进行计算时 的精度问题，二进制精度丢失 -> 两个精度丢失的值加起来精度更丢失。
 
+#### 怎么解决精度问题？
+
+将数字转成整数：
+
+```javascript
+function add(num1, num2) {
+  const num1Digits = (num1.toString().split(".")[1] || "").length;
+  const num2Digits = (num2.toString().split(".")[1] || "").length;
+  const baseNum = Math.pow(10, Math.max(num1Digits, num2Digits));
+  return (num1 * baseNum + num2 * baseNum) / baseNum;
+}
+```
+
 ### JS 整数是怎么表示的？
 
 通过 Number 类型来表示，遵循 IEEE754 标准，通过 64 位来表示一个数字，（1 + 11 + 52），最大安全数字(`Number.MAX_SAFE_INTEGER`)是 Math.pow(2, 53) - 1，对于 16 位十进制。（符号位 + 指数位 + 小数部分有效位）
@@ -63,17 +76,17 @@ JavaScript 用 Number 类型标识数字，使用 IEEE754 标准，通过 64 位
 symbol 不会被常规的方法（除了 Object.getOwnPropertySymbols 外）遍历到，所以可以用来模拟私有变量。
 
 ```javascript
-var Person = (function() {
-    let _name = Symbol();
-    class Person {
-        constructor(name) {
-            this[_name] = name;
-        }
-        
-        get name() {
-            return this[_name];
-        }
+var Person = (function () {
+  let _name = Symbol();
+  class Person {
+    constructor(name) {
+      this[_name] = name;
     }
-    return Person;
+
+    get name() {
+      return this[_name];
+    }
+  }
+  return Person;
 })();
 ```
