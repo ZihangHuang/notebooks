@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>嵌套数组变扁平并去重</title>
+  </head>
+  <body>
+    <script type="text/javascript">
+      const nestArr = [ [1, 2, 2], [3, 4, 5, 5], [6, 7, 8, 9, [11, 12, [12, 13, [14] ] ] ], 10];
+
+
+      function isArray(val) {
+          return Object.prototype.toString.call(val) === '[object Array]'
+      }
+
+      function unique(arr) {
+          return Array.from(new Set(arr))
+      }
+
+      // 递归
+      function flatArray1(arr, resArr = []) {
+          for(let i = 0, len = arr.length; i < len; i++) {
+              if(isArray(arr[i])) {
+                  flatArray1(arr[i], resArr)
+              }else{
+                  resArr.push(arr[i])
+              }
+          }
+
+          return unique(resArr) //去重
+      }
+      console.log('flatArray1:', flatArray1(nestArr))
+
+      // 递归
+      function flatArray2(arr) {
+          let resArr = []
+
+          for(let i = 0, len = arr.length; i < len; i++) {
+              if(isArray(arr[i])) {
+                  resArr = resArr.concat(flatArray2(arr[i]))
+              }else{
+                  resArr.push(arr[i])
+              }
+          }
+
+          return unique(resArr)
+      }
+      console.log('flatArray2:', flatArray2(nestArr))
+
+      //深度优先遍历1
+      function flatArray3(arr) {
+          const resArr = []
+          const stack = []
+
+          stack.push(arr)
+          while(stack.length > 0) {
+              const item = stack.pop()
+              if(isArray(item)) {
+                  for(let i = item.length - 1; i > -1; i--) {
+                      stack.push(item[i])
+                  }
+              }else{
+                  resArr.push(item)
+              }
+          }
+
+          return unique(resArr)
+      }
+      console.log('flatArray3:', flatArray3(nestArr))
+
+      //深度优先遍历2
+      function flatArray4(arr) {
+          const resArr = []
+          const stack = []
+
+          stack.push(arr)
+          while(stack.length > 0) {
+              const item = stack.shift()
+              if(isArray(item)) {
+                  for(let i = 0, len = item.length; i < len; i++) {
+                      stack.unshift(item[i])
+                  }
+              }else{
+                  resArr.unshift(item)
+              }
+          }
+
+          return unique(resArr)
+      }
+      console.log('flatArray4:', flatArray4(nestArr))
+
+      // 循环
+      function flatArray5(arr){
+          while(arr.some(item => Array.isArray(item))){
+              arr = [].concat(...arr);
+          }
+          return unique(new Set(arr))
+      }
+      console.log('flatArray5:', flatArray5(nestArr))
+
+      // 递归
+      function flatArray6(arr) {
+          return Array.isArray(arr) ? [].concat(...arr.map(flatArray6)) : arr
+      }
+
+      console.log('flatArray6:', unique(flatArray6(nestArr)))
+
+
+      // 递归
+      Array.prototype.flat= function() {
+          return [].concat(...this.map(item => (Array.isArray(item) ? item.flat() : [item])));
+      }
+
+      Array.prototype.unique = function() {
+          return [...new Set(this)]
+      }
+      console.log('flatArray7:', nestArr.flat().unique());
+    </script>
+  </body>
+</html>
