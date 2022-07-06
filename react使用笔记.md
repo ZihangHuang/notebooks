@@ -50,9 +50,9 @@ export const reducer: React.Reducer<State, Action> = function (state, action) {
 
 ```typescript
 import React from "react";
-import { TContextProps } from "./reducer";
+import { ContextProps } from "./reducer";
 
-const Store = React.createContext({} as TContextProps);
+const Store = React.createContext({} as ContextProps);
 
 export default Store;
 ```
@@ -99,6 +99,13 @@ const Child = () => {
     });
   };
 
-  return <div>Child</div>
+  return <div>Child</div>;
 };
 ```
+
+### React18 的变化总结
+
+- React17 之前，事件委托挂载在 document，React17 开始，变成挂载在渲染 react 树的根 dom 容器上，使得多版本并存成为可能。
+- React18 中，增加了新的 RootAPI：`ReactDOM.createRoot()`，以开启并发模式。
+- React17 之前，在 Promise 链、异步代码或者原生事件处理函数，不会合并多次的状态更新。React18 中，`ReactDOM.createRoot()`后，使用这些情况都会进行状态合并。如不想进行自动合并，可以使用`ReactDOM.flushSync()`。`flushSync`函数内部的多个 setState 仍然为批量更新，这样可以精准控制哪些不需要的批量更新。
+- 增加`startTransition`用于执行非紧急的状态更新。
