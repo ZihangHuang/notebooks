@@ -32,6 +32,7 @@
           this.itemHeight = itemHeight;
           this.totalList = totalList;
           this.startIndex = 0;
+          // 若每页可渲染的最大数大于自定义渲染数，则忽略自定义渲染数
           const maxCount = Math.floor(this.containerHeight / this.itemHeight);
           this.renderCount = renderCount < maxCount ? maxCount : renderCount;
           this.endIndex = this.startIndex + this.renderCount;
