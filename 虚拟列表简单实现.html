@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>虚拟滚动简单实现</title>
+    <style>
+      .container {
+        position: relative;
+        margin: 0 auto;
+        width: 500px;
+        height: 900px;
+        border: 1px solid #000;
+        overflow: auto;
+      }
+      .item {
+        border-bottom: 1px solid #000;
+        box-sizing: border-box;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container"></div>
+    <script>
+      const mockList = Array.from({ length: 30 }).map((v, i) => i);
+
+      class VirtualScroll {
+        constructor(id, totalList, itemHeight, renderCount = 10) {
+          this.container = document.querySelector(id);
+          this.containerHeight = this.container.clientHeight;
+          this.itemHeight = itemHeight;
+          this.totalList = totalList;
+          this.startIndex = 0;
+          const maxCount = Math.floor(this.containerHeight / this.itemHeight);
+          this.renderCount = renderCount < maxCount ? maxCount : renderCount;
+          this.endIndex = this.startIndex + this.renderCount;
+          this.deltaY = 0;
+          this.init();
+        }
+
+        renderList(list = []) {
+          this.container.querySelector('.list').innerHTML = list
+            .map(
+              (item) =>
+                `<div class="item" style="height: ${this.itemHeight}px;">${item}</div>`
+            )
+            .join('');
+        }
+
+        onScroll(e) {
+          const scrollTop = this.container.scrollTop;
+          const _startIndex = Math.floor(scrollTop / this.itemHeight);
+
+          if (_startIndex !== this.startIndex) {
+            this.startIndex = _startIndex;
+            this.setEndIndex();
+
+            this.render();
+          }
+        }
+
+        init() {
+          const list = document.createElement('div');
+          list.className = 'list';
+          this.container.append(list);
+          this.container.addEventListener('scroll', this.onScroll.bind(this));
+          this.render();
+        }
+        setPaddingTop(paddingTop) {
+          this.container.querySelector('.list').style.paddingTop =
+            paddingTop + 'px';
+        }
+
+        setEndIndex() {
+          this.endIndex = this.startIndex + this.renderCount;
+        }
+
+        render() {
+          const paddingTop = this.startIndex * this.itemHeight;
+          this.setPaddingTop(paddingTop);
+          // 为了可以继续向下滚动，多加载一项
+          const curList = this.totalList.slice(
+            this.startIndex,
+            this.endIndex + 1
+          );
+          this.renderList(curList);
+        }
+      }
+
+      new VirtualScroll('.container', mockList, 100, 5);
+    </script>
+  </body>
+</html>
