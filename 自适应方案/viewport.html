@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <script>
+      !(function () {
+        const DEFAULT_BASE_WIDTH = 375;
+        const baseWidth = DEFAULT_BASE_WIDTH;
+        const ratio = baseWidth / DEFAULT_BASE_WIDTH;
+        const phoneScale = (parseInt(window.screen.width) / baseWidth) * ratio;
+        if (/Android (\d+\.\d+)/.test(navigator.userAgent)) {
+          if (parseFloat(RegExp.$1) > 2.3) {
+            document.write(
+              '<meta name="viewport" content="width=' +
+                baseWidth +
+                ", minimum-scale = " +
+                phoneScale +
+                ", maximum-scale = " +
+                phoneScale +
+                '">'
+            );
+          } else
+            document.write(
+              '<meta name="viewport" content="width=' + baseWidth + '">'
+            );
+        } else
+          document.write(
+            '<meta name="viewport" content="width=' +
+              baseWidth +
+              ", viewport-fit=cover, minimum-scale = " +
+              phoneScale +
+              ", maximum-scale = " +
+              phoneScale +
+              '">'
+          );
+      })();
+    </script>
+    <style>
+      .box {
+        width: 100px;
+        height: 100px;
+        background: green;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="box"></div>
+  </body>
+</html>
