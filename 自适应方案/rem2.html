@@ -7,8 +7,8 @@
     <title>Document</title>
     <style>
       /* 假设当UI设计稿的宽度是375px，html的font-size为设置为100px。
-      当不同宽度的设备时，屏幕宽度为100vw，html的font-size为设置为 x 。
-      得出100vw / x = 375 / 100 （不同宽度的设备下rem的值相等），则x = 100vw / 3.75 */
+      在不同宽度的设备时，屏幕宽度为100vw，html的font-size为设置为 x 。
+      得出100vw / x = 375 / 100 （不同宽度的设备下rem的值不变），则x = 100vw / 3.75 */
       html {
         font-size: calc(100vw / 3.75);
       }
