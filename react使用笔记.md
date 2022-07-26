@@ -7,7 +7,7 @@ import React from "react";
 
 export interface State {
   name: string;
-  age: string;
+  age: number;
 }
 
 type ActionType = "SET_NAME" | "SET_AGE";
@@ -19,7 +19,7 @@ export interface Action {
 
 export interface ContextProps {
   state: State;
-  dispatch: React.dispatch<Action>;
+  dispatch: React.Dispatch<Action>;
 }
 
 export const initialState: State = {
