@@ -6,7 +6,7 @@
 两者的差异只在`flex-basis`。
 
 - `flex-basis: 0%;`: 自身指定的width被忽略，宽度通过占用比例计算出来。
-- `flex-basis: auto%;`: 自身指定的width有效，然后加上剩余的宽度占用比例。
+- `flex-basis: auto;`: 自身指定的width有效，然后加上剩余的宽度占用比例。
 
 ### BFC
 

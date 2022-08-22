@@ -90,3 +90,87 @@ var Person = (function () {
   return Person;
 })();
 ```
+
+### 事件冒泡与事件捕获
+
+先捕获再冒泡
+
+```html
+<div class="parent">
+  parent
+  <div class="child">
+    child
+    <div class="grandson">grandson</div>
+  </div>
+</div>
+```
+
+事件句柄在冒泡阶段执行
+
+```javascript
+// 点击grandson，依次打印
+// grandson
+// child
+// parent
+document.querySelector(".parent").addEventListener("click", () => {
+  console.log("parent");
+});
+
+document.querySelector(".child").addEventListener("click", () => {
+  console.log("child");
+});
+
+document.querySelector(".grandson").addEventListener("click", () => {
+  console.log("grandson");
+});
+```
+
+事件句柄在捕获阶段执行
+
+```javascript
+// 点击grandson，依次打印
+// parent
+// child
+// grandson
+document.querySelector(".parent").addEventListener(
+  "click",
+  () => {
+    console.log("parent");
+  },
+  true
+);
+
+document.querySelector(".child").addEventListener(
+  "click",
+  () => {
+    console.log("child");
+  },
+  true
+);
+
+document.querySelector(".grandson").addEventListener(
+  "click",
+  () => {
+    console.log("grandson");
+  },
+  true
+);
+```
+
+事件句柄在冒泡阶段执行
+
+```javascript
+// 点击grandson，依次打印
+// grandson
+// child
+// parent
+document.querySelector(".parent").onclick = function () {
+  console.log("parent");
+};
+document.querySelector(".child").onclick = function () {
+  console.log("child");
+};
+document.querySelector(".grandson").onclick = function () {
+  console.log("grandson");
+};
+```
