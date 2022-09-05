@@ -71,6 +71,7 @@ const isShow = computed({
 - eslint-plugin-prettier
 - eslint-plugin-vue
 - vue-eslint-parser
+- prettier
 
 .eslintrc 文件：
 
