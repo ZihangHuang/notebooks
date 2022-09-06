@@ -106,3 +106,21 @@ const isShow = computed({
   "rules": {}
 }
 ```
+
+### vue3 + ts 定义 props 和 emits
+
+```typescript
+import { withDefaults } from "vue";
+
+interface Props {
+  name: string;
+}
+
+const props = withDefaults(defineProps<Props>(), {
+  name: "jack",
+});
+
+const emits = defineEmits<{
+  (e: "onClick", value: any): void;
+}>();
+```
