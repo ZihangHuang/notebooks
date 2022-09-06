@@ -32,8 +32,38 @@
 
 ```css
 @media only screen and (-webkit-min-device-pixel-ratio: 2) {
-
 }
 ```
 
-或者使用js的`window.devicePixelRatio`。
+或者使用 js 的`window.devicePixelRatio`。
+
+### css 兼容性问题
+
+#### ios 适配虚拟 home 键（底部黑色横条）
+
+```css
+/*针对全面屏的底部安全区域做适配*/
+/*constant()和env()位置不能换*/
+/*env()和constant()函数有个必要的使用前提，H5网页设置viewport-fit=cover的时候才生效，小程序里的viewport-fit默认是cover。*/
+@supports (bottom: constant(safe-area-inset-bottom)) or
+  (bottom: env(safe-area-inset-bottom)) {
+  .body {
+    padding-bottom: constant(safe-area-inset-bottom); /* 兼容 iOS < 11.2 */
+    padding-bottom: env(safe-area-inset-bottom); /* 兼容 iOS >= 11.2 */
+    /* padding-bottom: calc(60px(假设值) + constant(safe-area-inset-bottom));
+        padding-bottom: calc(60px(假设值) + env(safe-area-inset-bottom));*/
+  }
+}
+```
+
+#### 安卓上，input 输入框在获取焦点时会被唤起的软键盘遮盖。
+
+```javascript
+dom.onfocus = function () {
+  if (isAndroid) {
+    setTimeout(function () {
+      dom.scrollIntoView && dom.scrollIntoView(false);
+    }, 1000);
+  }
+};
+```
