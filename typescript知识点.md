@@ -36,3 +36,8 @@ type fn = () => number
 type fnReturnType = ReturnType<fn> // number
 ```
 infer R 代表待推断的返回值类型，如果 T 是一个函数(...args: any[]) => infer R，则返回函数的返回值 R，否则返回any
+
+### isolatedModules 作用
+
+将每个文件作为单独的模块。
+当ts文件没有导出或导入模块，或者只使用类似`const enums`（内联替换的特性）和 `namespaces`类似的全局功能时，会提示“无法在 "--isolatedModules" 下编译xx.ts，因为它被视为全局脚本文件。请添加导入、导出或空的 "export {}" 语句来使它成为模块。”。使用模块可以提高typescript的编译速度，因为全局脚本文件需要检查其他文件来生成某个文件，这会使输出速度变慢。
