@@ -14,7 +14,7 @@ export default {
         return this.visible; // props
       },
       set(val) {
-        this.$emit("update:visible", val);
+        this.$emit('update:visible', val);
       },
     },
   },
@@ -41,13 +41,13 @@ const _props = defineProps({
   },
 });
 const props = toRefs(_props);
-const emit = defineEmits(["update:modelValue"]);
+const emit = defineEmits(['update:modelValue']);
 const isShow = computed({
   get() {
     return props.modelValue.value;
   },
   set(val) {
-    emit("update:modelValue", val);
+    emit('update:modelValue', val);
   },
 });
 </script>
@@ -110,17 +110,48 @@ const isShow = computed({
 ### vue3 + ts 定义 props 和 emits
 
 ```typescript
-import { withDefaults } from "vue";
+import { withDefaults } from 'vue';
 
 interface Props {
   name: string;
 }
 
 const props = withDefaults(defineProps<Props>(), {
-  name: "jack",
+  name: 'jack',
 });
 
 const emits = defineEmits<{
-  (e: "onClick", value: any): void;
+  (e: 'onClick', value: any): void;
 }>();
+```
+
+### vue2 自定义指令
+
+```typescript
+const trigger = (el, type) => {
+  const e = document.createEvent('HTMLEvents');
+  e.initEvent(type, true, true);
+  el.dispatchEvent(e);
+};
+Vue.directive('int', {
+  inserted: function (el) {
+    let input: HTMLInputElement;
+    if (el.tagName === 'input') {
+      input = el as HTMLInputElement;
+    } else {
+      input = el.getElementsByTagName('input')[0];
+    }
+
+    if (!input) return;
+
+    input.onkeyup = function (e) {
+      if (input.value.length === 1) {
+        input.value = input.value.replace(/[^1-9]/g, '');
+      } else {
+        input.value = input.value.replace(/[^\d]/g, '');
+      }
+      trigger(input, 'input');
+    };
+  },
+});
 ```
