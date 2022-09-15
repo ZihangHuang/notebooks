@@ -9,6 +9,8 @@
 
 执行`npm set-script prepare "husky install"`后，可以在 package.json 文件的 scripts 配置项中看到 `"prepare": "husky install"`
 
+执行`npm install` 或者 `npm run prepare` 初始化 husky。
+
 ### 代码提交 linters
 
 package.json 文件添加：
