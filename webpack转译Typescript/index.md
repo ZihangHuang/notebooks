@@ -1,0 +1,1 @@
+`typescript`编译工具可参考[https://www.dengwb.com/typescript/project/compile-tools.html#ts-loader]
