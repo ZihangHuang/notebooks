@@ -48,7 +48,7 @@ module.exports = merge(common, {
             }
         ]),
         new MiniCssExtractPlugin({
-            filename: 'css/[name].[hash].css' // 将处理后的CSS代码提取为独立的CSS文件，可以只在生产环境中配置
+            filename: 'css/[name].[hash].css' // 将处理后的CSS代码提取为独立的CSS文件，用link外部引入，减少JS文件的大小，可以只在生产环境中配置
         })
     ]
 });
