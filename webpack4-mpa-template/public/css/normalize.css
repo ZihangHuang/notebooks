@@ -1,0 +1,27 @@
+* {
+    margin: 0;
+    padding: 0;
+}
+body {
+  color: #fff;
+}
+
+a{text-decoration: none;}
+a:hover{text-decoration: none;}
+
+ul, li {
+    list-style: none;
+}
+
+.clearfix {
+  zoom: 1;
+}
+.clearfix:after {
+    content: '';
+    display: block;
+    clear: both;
+    visibility: hidden;
+    overflow: hidden;
+    height: 0;
+    line-height: 0;
+}
