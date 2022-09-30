@@ -174,3 +174,44 @@ document.querySelector(".grandson").onclick = function () {
   console.log("grandson");
 };
 ```
+
+### JS 值的传递方式
+
+JS 的基本类型，是按值传递的。
+
+```javascript
+var a = 1;
+function foo(x) {
+  x = 2;
+}
+foo(a);
+console.log(a); // 仍为1, 未受x = 2赋值所影响
+```
+
+再来看对象：
+
+```javascript
+var obj = { x: 1 };
+function foo(o) {
+  o.x = 3;
+}
+foo(obj);
+console.log(obj.x); // 3, 被修改了!
+```
+
+说明 o 和 obj 是同一个对象，o 不是 obj 的副本。所以不是按值传递。 但这样是否说明 JS 的对象是按引用传递的呢？
+
+再看下面的例子：
+
+```javascript
+var obj = { x: 1 };
+function foo(o) {
+  o = 100;
+}
+foo(obj);
+console.log(obj.x); // 仍然是1, obj并未被修改为100
+```
+
+如果是按引用传递，修改形参 o 的值，应该影响到实参才对。但这里修改 o 的值并未影响 obj。 因此 JS 中的对象并不是按引用传递。
+准确的说，JS 中的基本类型按值传递，对象类型按共享传递的(call by sharing，也叫按对象传递、按对象共享传递)。
+调用函数传参时，函数接受对象实参引用的副本(既不是按值传递的对象副本，也不是按引用传递的隐式引用)。 它和按引用传递的不同在于：在共享传递中对函数形参的赋值，不会影响实参的值。如上面面例子中，不可以通过修改形参 o 的值，来修改 obj 的值。
