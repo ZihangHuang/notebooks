@@ -26,9 +26,9 @@ Fiber 协调器的主要目标是增量渲染，更好更平滑地渲染 UI 动�
 
 基于以上三个前提，React 分别对 tree diff、component diff 以及 element diff 进行算法优化。
 
-- React 通过分层求异的策略，对 tree diff 进行算法优化。
-- React 通过相同类生成相似树形结构，不同类生成不同树形结构的策略，对 component diff 进行算法优化。
-- React 通过设置唯一 key 的策略，对 element diff 进行算法优化。
+- tree diff：只会对同一层次的节点进行比较，如果节点不存在直接删除创建。
+- component diff：同一类型的组件继续tree diff比较，不同类型的组件直接删除重建。
+- element diff：根据唯一 key（如有），对节点进行插入，移动，删除。
 
 ## React 合成事件
 
