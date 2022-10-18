@@ -33,15 +33,19 @@ export default {
 ```vue
 <template>
   <el-dialog v-model="isShow"></el-dialog>
+  <el-dialog v-model="isShow2"></el-dialog>
 </template>
 <script setup>
 const _props = defineProps({
   modelValue: {
     type: Boolean,
   },
+  dialogVisible: {
+    type: Boolean,
+  },
 });
 const props = toRefs(_props);
-const emit = defineEmits(['update:modelValue']);
+const emit = defineEmits(['update:modelValue', 'update:dialogVisible']);
 const isShow = computed({
   get() {
     return props.modelValue.value;
@@ -50,13 +54,22 @@ const isShow = computed({
     emit('update:modelValue', val);
   },
 });
+
+const isShow2 = computed({
+  get() {
+    return _props.dialogVisible
+  },
+  set(val) {
+    emit('update:dialogVisible', val)
+  },
+})
 </script>
 ```
 
 外部使用组件:
 
 ```vue
-<my-component v-model="visible" />
+<my-component v-model="visible" v-model:dialogVisible="visible" />
 ```
 
 ### Vue3 + Typescript 配置 Eslint + Prettier
