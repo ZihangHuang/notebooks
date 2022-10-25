@@ -17,7 +17,7 @@ package.json 文件添加：
 
 ```json
 "lint-staged": {
-    "*.{vue,ts,tsx}": [
+    "src/**/*.{vue,ts,tsx}": [
         "prettier --write",
         "eslint -c .eslintrc --fix"
     ]
