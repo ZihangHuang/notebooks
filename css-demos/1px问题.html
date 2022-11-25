@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>1px问题</title>
+    <style type="text/css">
+      /* 方案1：0.5px 实现 */
+      .border-1px-1 {
+        border: 1px solid #000;
+      }
+      @media screen and (-webkit-min-device-pixel-ratio: 2) {
+        .border-1px-1 {
+          border: 0.5px solid #000;
+        }
+      }
+      /* dpr=2 和 dpr=3 情况下 border 相差无几，下面代码可以省略*/
+      @media screen and (-webkit-min-device-pixel-ratio: 3) {
+        .border-1px-1 {
+          border: 0.333333px solid #000;
+        }
+      }
+
+      /* 方案2：border-image 实现 */
+      /* .border-1px {
+        border-bottom: 1px solid #000;
+      }
+      @media only screen and (-webkit-min-device-pixel-ratio: 2) {
+        .border_1px {
+          border-bottom: none;
+          border-width: 0 0 1px 0;
+          border-image: url(../img/1pxline.png) 0 0 2 0 stretch;
+        }
+      } */
+
+      /* 方案3
+      viewport：通过设置缩放，让 CSS 像素等于真正的物理像素。
+      使用rem，在CSS中用rem单位 */
+
+      /* 方案4：伪元素 + transform 实现 */
+      .border-1px-4 {
+        margin-top: 100px;
+        position: relative;
+      }
+      .border-1px-4:before {
+        content: "";
+        position: absolute;
+        top: 0;
+        height: 1px;
+        width: 100%;
+        background-color: #000;
+        transform-origin: 50% 0%;
+      }
+      @media only screen and (-webkit-min-device-pixel-ratio: 2) {
+        .border-1px-4:before {
+          transform: scaleY(0.5);
+        }
+      }
+      @media only screen and (-webkit-min-device-pixel-ratio: 3) {
+        .border-1px-4:before {
+          transform: scaleY(0.33);
+        }
+      }
+
+      /* 方案5：使用box-shadow */
+      .border-1px-5 {
+        margin-top: 100px;
+        box-shadow:0 1px 1px -1px rgba(0, 0, 0, 1);
+      }
+    </style>
+  </head>
+  <body>
+    <div class="border-1px-1"></div>
+    <div class="border-1px-4"></div>
+    <div class="border-1px-5"></div>
+  </body>
+</html>
