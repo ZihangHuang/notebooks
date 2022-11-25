@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+    <meta charset="UTF-8" />
+    <title></title>
+    <style>
+      .main {
+        width: 100%;
+        height: 100%;
+        position: fixed;
+        left: 0;
+        top: 0;
+      }
+      .loading {
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        right: 0;
+        left: 0;
+        width: 100px;
+        height: 50px;
+        margin: auto;
+      }
+      .loading i {
+        display: inline-block;
+        margin: 0 2px;
+        width: 6px;
+        height: 20px;
+        background-color: #ccc;
+        animation: load 1.2s infinite;
+      }
+      .loading i:nth-child(2) {
+        animation-delay: 0.1s;
+      }
+      .loading i:nth-child(3) {
+        animation-delay: 0.2s;
+      }
+      .loading i:nth-child(4) {
+        animation-delay: 0.3s;
+      }
+      .loading i:nth-child(5) {
+        animation-delay: 0.4s;
+      }
+      .loading i:nth-child(6) {
+        animation-delay: 0.5s;
+      }
+
+      @keyframes load {
+        0%,
+        40%,
+        100% {
+          transform: scaleY(0.4);
+        }
+        20% {
+          transform: scaleY(1);
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="main">
+      <div class="loading">
+        <i></i>
+        <i></i>
+        <i></i>
+        <i></i>
+        <i></i>
+        <i></i>
+      </div>
+    </div>
+  </body>
+</html>

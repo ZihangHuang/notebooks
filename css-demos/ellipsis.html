@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Document</title>
+    <style type="text/css">
+      .text {
+        width: 200px;
+        height: 100px;
+      }
+      .text2 {
+        position: relative;
+        margin-top: 100px;
+        width: 200px;
+        height: 36px;
+        line-height: 18px;
+        overflow: hidden;
+        word-break: break-all;
+      }
+      .text2::after {
+        content: '...';
+        position: absolute;
+        bottom: 0;
+        right: 0;
+        /* 为了展示效果更好 */
+        background: -webkit-gradient(
+          linear,
+          left top,
+          right top,
+          from(rgba(255, 255, 255, 0)),
+          to(white),
+          color-stop(50%, white)
+        );
+        background: -moz-linear-gradient(
+          to right,
+          rgba(255, 255, 255, 0),
+          white 50%,
+          white
+        );
+        background: -o-linear-gradient(
+          to right,
+          rgba(255, 255, 255, 0),
+          white 50%,
+          white
+        );
+        background: -ms-linear-gradient(
+          to right,
+          rgba(255, 255, 255, 0),
+          white 50%,
+          white
+        );
+        background: linear-gradient(
+          to right,
+          rgba(255, 255, 255, 0),
+          white 50%,
+          white
+        );
+      }
+    </style>
+  </head>
+  <body>
+    <div class="text">
+      Lorem ipsum dolor sit amet, consectetur adipisicing elit. Dignissimos
+      labore sit vel itaque delectus atque quos magnam assumenda quod architecto
+      perspiciatis animi.
+    </div>
+
+    <p class="text2">
+      Lorem ipsum dolor sit amet, consectetur adipisicing elit. Dignissimos
+      labore sit vel itaque delectus atque quos magnam assumenda quod architecto
+      perspiciatis animi.
+    </p>
+
+    <script type="text/javascript">
+      const p = document.querySelector('.text');
+      let words = p.innerHTML.split(/(?<=[\u4e00-\u9fa5])|(?<=\w*?\b)/g); // \u4e00-\u9fa5:匹配一个或多个中文
+
+      while (p.scrollHeight > p.clientHeight) {
+        words.pop();
+        p.innerHTML = words.join('') + '...';
+      }
+    </script>
+  </body>
+</html>
