@@ -102,3 +102,7 @@ const Child = () => {
   return <div>Child</div>;
 };
 ```
+
+### 惰性初始 state
+
+`useState`可以传入一个函数，在函数中计算并返回初始的 state，此函数只在初始渲染时被调用。
