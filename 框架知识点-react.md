@@ -30,6 +30,8 @@ Fiber 协调器的主要目标是增量渲染，更好更平滑地渲染 UI 动�
 - component diff：同一类型的组件继续tree diff比较，不同类型的组件直接删除重建。
 - element diff：根据唯一 key（如有），对节点进行插入，移动，删除。
 
+相关文章：https://juejin.cn/post/6978370715573714952
+
 ## React 合成事件
 
 在 react 中，我们绑定的事件 onClick 等，并不是原生事件，而是由原生事件合成的 React 事件，比如 click 事件合成为 onClick 事件。比如 blur , change , input , keydown , keyup 等 , 合成为 onChange。
