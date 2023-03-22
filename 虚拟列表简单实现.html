@@ -42,12 +42,12 @@
         }
 
         renderList(list = []) {
-          this.container.querySelector(".list").innerHTML = list
+          this.container.querySelector('.list').innerHTML = list
             .map(
               (item) =>
                 `<div class="item" style="height: ${this.itemHeight}px;">${item}</div>`
             )
-            .join("");
+            .join('');
         }
 
         onScroll(e) {
@@ -63,15 +63,15 @@
         }
 
         init() {
-          const list = document.createElement("div");
-          list.className = "list";
+          const list = document.createElement('div');
+          list.className = 'list';
           this.container.append(list);
-          this.container.addEventListener("scroll", this.onScroll.bind(this));
+          this.container.addEventListener('scroll', this.onScroll.bind(this));
           this.render();
         }
         setPaddingTop(paddingTop) {
-          this.container.querySelector(".list").style.paddingTop =
-            paddingTop + "px";
+          this.container.querySelector('.list').style.paddingTop =
+            paddingTop + 'px';
         }
 
         setEndIndex() {
@@ -90,21 +90,22 @@
         }
       }
 
-      new VirtualScroll(".container", mockList, 100, 5);
+      new VirtualScroll('.container', mockList, 100, 5);
 
       //  2、子元素不等高
       //   思路：
-      //   需要遍历列表，搜集每个子元素的位置信息
+      //   因为每个子元素高度不确定，需要设置个估计高度(estimateHeight)先渲染，然后渲染完成后获得真实行高并进行更新
+      //   之前计算renderCount是通过 容器高度/子元素高度，现在需要改成 容器高度/估计高度
+      //   然后就可以渲染renderCount个元素的，其他跟等高的差不多。
+      //   需要搜集子元素的位置信息，未渲染的元素获取不了，只能获取已渲染元素的信息
       //   {
       //     index, // 序号
       //     height, // 子元素的高度，可以通过getBoundingClientRect().height获取
       //     top, // 顶部距离第一个元素的顶部的偏移量
       //     bottom: top + height // 底部距离第一个元素的顶部的偏移量
       //   }
-      //   因为每个子元素高度不确定，需要设置个估计高度(estimateHeight)先渲染，然后渲染完成后获得真实行高并进行更新
-      //   之前计算renderCount是通过 容器高度/子元素高度，现在需要改成 容器高度/估计高度
-      //   然后就可以渲染renderCount个元素的，其他跟等高的差不多。
       //   至于渲染后如何根据子元素真实高度进行更新，可以查到当前scrollTop所对应到哪个子元素（startIndex），然后再计算准确的renderCount，
+      //   子元素有可能高度会变化，可以使用ResizeObserver（监听 DOM 元素大小变化）等
       //   具体待更新。。。。。。
     </script>
   </body>
