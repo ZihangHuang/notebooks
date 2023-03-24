@@ -105,7 +105,6 @@
 
       console.log('flatArray6:', unique(flatArray6(nestArr)))
 
-
       // 递归
       Array.prototype.flat= function() {
           return [].concat(...this.map(item => (Array.isArray(item) ? item.flat() : [item])));
