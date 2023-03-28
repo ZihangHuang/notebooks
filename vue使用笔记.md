@@ -2,6 +2,8 @@
 
 - vue2
 
+1、.sync
+
 ```vue
 <template>
   <el-dialog :visible.sync="isShow"></el-dialog>
@@ -14,7 +16,7 @@ export default {
         return this.visible; // props
       },
       set(val) {
-        this.$emit('update:visible', val);
+        this.$emit("update:visible", val);
       },
     },
   },
@@ -26,6 +28,37 @@ export default {
 
 ```vue
 <my-component :visible.sync="visible" />
+```
+
+2、v-model
+
+```vue
+<template>
+  <el-dialog :visible.sync="isShow"></el-dialog>
+</template>
+<script>
+export default {
+  props: {
+    value: String,
+  },
+  computed: {
+    isShow: {
+      get() {
+        return this.value; // props
+      },
+      set(val) {
+        this.$emit("input", val);
+      },
+    },
+  },
+};
+</script>
+```
+
+外部使用组件:
+
+```vue
+<my-component v-model="visible" />
 ```
 
 - vue3
@@ -45,24 +78,24 @@ const _props = defineProps({
   },
 });
 const props = toRefs(_props);
-const emit = defineEmits(['update:modelValue', 'update:dialogVisible']);
+const emit = defineEmits(["update:modelValue", "update:dialogVisible"]);
 const isShow = computed({
   get() {
     return props.modelValue.value;
   },
   set(val) {
-    emit('update:modelValue', val);
+    emit("update:modelValue", val);
   },
 });
 
 const isShow2 = computed({
   get() {
-    return _props.dialogVisible
+    return _props.dialogVisible;
   },
   set(val) {
-    emit('update:dialogVisible', val)
+    emit("update:dialogVisible", val);
   },
-})
+});
 </script>
 ```
 
@@ -123,18 +156,18 @@ const isShow2 = computed({
 ### vue3 + ts 定义 props 和 emits
 
 ```typescript
-import { withDefaults } from 'vue';
+import { withDefaults } from "vue";
 
 interface Props {
   name: string;
 }
 
 const props = withDefaults(defineProps<Props>(), {
-  name: 'jack',
+  name: "jack",
 });
 
 const emits = defineEmits<{
-  (e: 'onClick', value: any): void;
+  (e: "onClick", value: any): void;
 }>();
 ```
 
@@ -142,28 +175,28 @@ const emits = defineEmits<{
 
 ```typescript
 const trigger = (el, type) => {
-  const e = document.createEvent('HTMLEvents');
+  const e = document.createEvent("HTMLEvents");
   e.initEvent(type, true, true);
   el.dispatchEvent(e);
 };
-Vue.directive('int', {
+Vue.directive("int", {
   inserted: function (el) {
     let input: HTMLInputElement;
-    if (el.tagName === 'input') {
+    if (el.tagName === "input") {
       input = el as HTMLInputElement;
     } else {
-      input = el.getElementsByTagName('input')[0];
+      input = el.getElementsByTagName("input")[0];
     }
 
     if (!input) return;
 
     input.onkeyup = function (e) {
       if (input.value.length === 1) {
-        input.value = input.value.replace(/[^1-9]/g, '');
+        input.value = input.value.replace(/[^1-9]/g, "");
       } else {
-        input.value = input.value.replace(/[^\d]/g, '');
+        input.value = input.value.replace(/[^\d]/g, "");
       }
-      trigger(input, 'input');
+      trigger(input, "input");
     };
   },
 });
