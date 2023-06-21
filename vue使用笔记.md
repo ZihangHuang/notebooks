@@ -201,3 +201,37 @@ Vue.directive("int", {
   },
 });
 ```
+
+### vue3 script setup 中使用 beforeRouteEnter
+
+```html
+<script lang="ts">
+import { defineComponent, ComponentPublicInstance } from 'vue';
+
+
+export default defineComponent({
+  beforeRouteEnter(to, from, next) {
+    next((vm) => {
+      const instance = vm as ComponentPublicInstance;
+        instance.data.name = 'jerry';  //变量调用
+        instance.getUserInfo();   // 函数调用
+    });
+  },
+});
+</script>
+
+<script lang="ts" setup>
+import { reactive } from 'vue';
+interface typeData{
+    name:number;
+}
+const data = reactive<typeData>({
+  name: 'jack'
+});
+const getUserInfo=()=>{
+    return 'tom'
+}
+
+// 暴露变量和方法给beforeRouteEnter调用
+defineExpose({ data, getUserInfo });
+```
