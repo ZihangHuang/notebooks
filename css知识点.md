@@ -68,6 +68,19 @@ dom.onfocus = function () {
 };
 ```
 
+## 容易混淆的css属性
+
+换行相关
+
+- `word-break:break-all`：所有的都换行。
+- `word-wrap:break-word`：自动换行，但如果这一行文字有可以换行的点，如空格，或CJK(Chinese/Japanese/Korean)(中文/日文/韩文)之类的，则就不打英文单词或字符的主意了，让这些换行点换行，至于对不对齐，好不好看，则不关心，因此，很容易出现一片一片空白的情况。
+- `white-space:nowrap`：强制不换行。
+
+其他
+
+- `word-spacing`：单词之间间距的。
+- `white-space`：字符是否换行显示的。
+
 ## 常用 css
 
 ```css
