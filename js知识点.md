@@ -8,7 +8,7 @@
 
 ```javascript
 console.log(typeof value); // 报错
-let value = "value";
+let value = 'value';
 ```
 
 不同作用域：
@@ -16,7 +16,7 @@ let value = "value";
 ```javascript
 console.log(typeof value); // undefined
 if (true) {
-  let value = "value";
+  let value = 'value';
 }
 ```
 
@@ -39,6 +39,8 @@ JavaScript 用 Number 类型标识数字，使用 IEEE754 标准，通过 64 位
 
 但是由于`IEEE 754`尾数位数限制，需要截掉后面多余的，这样就丢失了精度。
 
+精简回答：由于 js 使用 IEEE754 标准的双精度浮点数，0.1 和 0.2 在二进制转换时产生无限循环，导致存储和计算时精度丢失。
+
 为什么 x=0.1 能得到 0.1？
 标准中规定尾数 f 的固定长度是 52 位，再加上省略的一位，这 53 位是 JS 精度范围。它最大可以表示 2^53(9007199254740992), 长度是 16，所以可以使用 toPrecision(16) 来做精度运算，超过的精度会自动做凑整处理
 
@@ -56,14 +58,22 @@ JavaScript 用 Number 类型标识数字，使用 IEEE754 标准，通过 64 位
 
 ### 怎么解决精度问题？
 
-将数字转成整数：
+1.将数字转成整数：
 
 ```javascript
 function add(num1, num2) {
-  const num1Digits = (num1.toString().split(".")[1] || "").length;
-  const num2Digits = (num2.toString().split(".")[1] || "").length;
+  const num1Digits = (num1.toString().split('.')[1] || '').length;
+  const num2Digits = (num2.toString().split('.')[1] || '').length;
   const baseNum = Math.pow(10, Math.max(num1Digits, num2Digits));
   return (num1 * baseNum + num2 * baseNum) / baseNum;
+}
+```
+
+2.误差容忍比较：检查差值是否小于最小精度：
+
+```js
+function epsilon(num1, num2, sum) {
+  return Math.abs(num1 + num2 - sum) < Number.EPSILON;
 }
 ```
 
@@ -112,16 +122,16 @@ var Person = (function () {
 // grandson
 // child
 // parent
-document.querySelector(".parent").addEventListener("click", () => {
-  console.log("parent");
+document.querySelector('.parent').addEventListener('click', () => {
+  console.log('parent');
 });
 
-document.querySelector(".child").addEventListener("click", () => {
-  console.log("child");
+document.querySelector('.child').addEventListener('click', () => {
+  console.log('child');
 });
 
-document.querySelector(".grandson").addEventListener("click", () => {
-  console.log("grandson");
+document.querySelector('.grandson').addEventListener('click', () => {
+  console.log('grandson');
 });
 ```
 
@@ -132,26 +142,26 @@ document.querySelector(".grandson").addEventListener("click", () => {
 // parent
 // child
 // grandson
-document.querySelector(".parent").addEventListener(
-  "click",
+document.querySelector('.parent').addEventListener(
+  'click',
   () => {
-    console.log("parent");
+    console.log('parent');
   },
   true
 );
 
-document.querySelector(".child").addEventListener(
-  "click",
+document.querySelector('.child').addEventListener(
+  'click',
   () => {
-    console.log("child");
+    console.log('child');
   },
   true
 );
 
-document.querySelector(".grandson").addEventListener(
-  "click",
+document.querySelector('.grandson').addEventListener(
+  'click',
   () => {
-    console.log("grandson");
+    console.log('grandson');
   },
   true
 );
@@ -164,14 +174,14 @@ document.querySelector(".grandson").addEventListener(
 // grandson
 // child
 // parent
-document.querySelector(".parent").onclick = function () {
-  console.log("parent");
+document.querySelector('.parent').onclick = function () {
+  console.log('parent');
 };
-document.querySelector(".child").onclick = function () {
-  console.log("child");
+document.querySelector('.child').onclick = function () {
+  console.log('child');
 };
-document.querySelector(".grandson").onclick = function () {
-  console.log("grandson");
+document.querySelector('.grandson').onclick = function () {
+  console.log('grandson');
 };
 ```
 
@@ -239,7 +249,7 @@ function fn() {
   obj1.name = obj2;
   obj2.name = obj1;
 
-  return "abc";
+  return 'abc';
 }
 ```
 
@@ -301,6 +311,7 @@ dateVal：可选，一个代表日期的数值。如果没有提供此参数，�
 所以，从对 dataVal 参数的说明可以看出，在设置月份的同时，使用 getDate 获取日期，并使用得到的日期值设置了日期。于是就会发生月份顺延的情况。
 
 解决方法：
+
 - 设置月份时，将日期设为 1，记 setMonth(month, 1)，当然可以在 setMonth 之前先调用 setDate()设置日期；
 - 也可以在初始化 Date 对象时，就指定一个日期，也就是使用：dateObj = new Date(year, month, date[, hours[, minutes[, seconds[,ms]]]]) 的形式。
 - 也可以使用 setFullYear()同时设置年、月、日，即 setFullYear(numYear[, numMonth[, numDate]])。
