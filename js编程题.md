@@ -8,8 +8,8 @@ function myfetch(url) {
     // const timeout = parseInt(Math.random() * 3 * 1000)
     const timeout = 1000;
     setTimeout(() => {
-      console.log("res:" + url);
-      resolve("res:" + url);
+      console.log('res:' + url);
+      resolve('res:' + url);
     }, timeout);
   });
 }
@@ -23,8 +23,8 @@ function sendRequest(urls, num, callback) {
   })([]);
 }
 
-sendRequest(["a.com", "b.com", "c.com", "d.com", "e.com"], 2, () => {
-  console.log("done");
+sendRequest(['a.com', 'b.com', 'c.com', 'd.com', 'e.com'], 2, () => {
+  console.log('done');
 });
 ```
 
@@ -39,13 +39,13 @@ function handleFetchQueue(urls, max, callback) {
   const handleRequest = (url) => {
     const req = myfetch(url)
       .then((res) => {
-        console.log("当前并发： " + requestsQueue);
+        console.log('当前并发： ' + requestsQueue);
         const len = results.push(res);
         if (len < urlCount && i + 1 < urlCount) {
           requestsQueue.shift();
           handleRequest(urls[++i]);
         } else if (len === urlCount) {
-          "function" === typeof callback && callback(results);
+          'function' === typeof callback && callback(results);
         }
       })
       .catch((e) => {
@@ -75,7 +75,7 @@ const myfetch = function (idx) {
 const max = 2;
 
 const callback = () => {
-  console.log("run callback");
+  console.log('run callback');
 };
 ```
 
@@ -89,7 +89,7 @@ const callback = () => {
  */
 
 function deepClone(obj = {}, map = new Map()) {
-  if (typeof obj !== "object") {
+  if (typeof obj !== 'object') {
     return obj;
   }
   if (map.get(obj)) {
@@ -100,7 +100,7 @@ function deepClone(obj = {}, map = new Map()) {
   if (
     obj instanceof Array ||
     // 加 || 的原因是为了防止 Array 的 prototype 被重写，Array.isArray 也是如此
-    Object.prototype.toString(obj) === "[object Array]"
+    Object.prototype.toString(obj) === '[object Array]'
   ) {
     result = [];
   }
@@ -123,8 +123,8 @@ function deepClone(obj = {}, map = new Map()) {
 type MyPromiseCb = (resolve?: Function, reject?: Function) => any;
 
 class MyPromise {
-  private status: "pending" | "fullfilled" | "rejected" = "pending";
-  private value: any = ""; // 保存resolve或者reject的值
+  private status: 'pending' | 'fullfilled' | 'rejected' = 'pending';
+  private value: any = ''; // 保存resolve或者reject的值
   private handlers: Function[] = [];
   private errorHandlers: Function[] = [];
 
@@ -139,7 +139,7 @@ class MyPromise {
       handler(...args);
     }
 
-    this.status = "fullfilled";
+    this.status = 'fullfilled';
   }
 
   reject(...args) {
@@ -148,7 +148,7 @@ class MyPromise {
     while ((handler = this.errorHandlers.shift())) {
       handler(...args);
     }
-    this.status = "rejected";
+    this.status = 'rejected';
   }
 
   then(onFulfilled?: any, onRejected?: any) {
@@ -157,7 +157,7 @@ class MyPromise {
     return new MyPromise(function (onFulfilledNext, onRejectedNext) {
       let fulfilled = (val) => {
         try {
-          if (typeof onFulfilled !== "function") {
+          if (typeof onFulfilled !== 'function') {
             onFulfilledNext(val);
           } else {
             let res = onFulfilled(val);
@@ -177,7 +177,7 @@ class MyPromise {
 
       let rejected = (err) => {
         try {
-          if (typeof onRejected !== "function") {
+          if (typeof onRejected !== 'function') {
             onRejectedNext(err);
           } else {
             let res = onRejected(err);
@@ -195,17 +195,17 @@ class MyPromise {
       };
 
       switch (t.status) {
-        case "pending":
+        case 'pending':
           t.handlers.push(fulfilled);
           t.errorHandlers.push(rejected);
 
           break;
 
-        case "fullfilled":
+        case 'fullfilled':
           onFulfilled(...t.value);
           break;
 
-        case "rejected":
+        case 'rejected':
           onRejected(...t.value);
           break;
       }
@@ -257,68 +257,68 @@ class MyPromise {
 
 // 测试：
 const p1 = new MyPromise((resolve) =>
-  setTimeout(resolve.bind(null, "resolved"), 2000)
+  setTimeout(resolve.bind(null, 'resolved'), 2000)
 );
-p1.then((res) => res + " then").then((...args) =>
-  console.log("second", ...args)
+p1.then((res) => res + ' then').then((...args) =>
+  console.log('second', ...args)
 );
 // second resolved then
 
 // then返回MyPromise
 const p1_p = new MyPromise((resolve) =>
-  setTimeout(resolve.bind(null, "resolved"), 2000)
+  setTimeout(resolve.bind(null, 'resolved'), 2000)
 );
 p1_p
   .then(
     (res) =>
       new MyPromise((resolve) => {
-        resolve(res + " then");
+        resolve(res + ' then');
       })
   )
-  .then((...args) => console.log("p1_p second", ...args));
+  .then((...args) => console.log('p1_p second', ...args));
 // p1_p second resolved then
 
 const p2 = new MyPromise((resolve, reject) =>
-  setTimeout(reject.bind(null, "rejected"), 2000)
+  setTimeout(reject.bind(null, 'rejected'), 2000)
 );
-p2.then((res) => res + " then")
+p2.then((res) => res + ' then')
   .catch((...args) => {
-    console.log("fail", ...args);
-    return "fail";
+    console.log('fail', ...args);
+    return 'fail';
   })
-  .then((res) => console.log(res + " then2"));
+  .then((res) => console.log(res + ' then2'));
 // fail rejected
 // fail then2
 
 const p3 = new MyPromise((resolve) => {
-  setTimeout(resolve.bind(null, "p3"), 1000);
+  setTimeout(resolve.bind(null, 'p3'), 1000);
 });
 const p4 = new MyPromise((resolve) => {
-  setTimeout(resolve.bind(null, "p4"), 3000);
+  setTimeout(resolve.bind(null, 'p4'), 3000);
 });
 MyPromise.race([p3, p4]).then((res) => {
-  console.log("promise race:", res);
+  console.log('promise race:', res);
 });
 // promise race: p3
 
 const p5 = new MyPromise((resolve) => {
-  setTimeout(resolve.bind(null, "p5"), 1000);
+  setTimeout(resolve.bind(null, 'p5'), 1000);
 });
 const p6 = new MyPromise((resolve) => {
-  setTimeout(resolve.bind(null, "p6"), 3000);
+  setTimeout(resolve.bind(null, 'p6'), 3000);
 });
 MyPromise.all([p5, p6])
   .then((res) => {
-    console.log("promise all:", res);
+    console.log('promise all:', res);
   })
-  .catch((err) => console.log("promise all error:", err));
+  .catch((err) => console.log('promise all error:', err));
 // promise all: ["p5", "p6"]
 
 const p7 = new MyPromise((resolve, reject) => {
-  setTimeout(resolve.bind(null, "p7"), 1000);
+  setTimeout(resolve.bind(null, 'p7'), 1000);
 });
 p7.finally(() => {
-  console.log("p7-finally"); // p7-finally
+  console.log('p7-finally'); // p7-finally
 }).then((res) => {
   console.log(res);
 });
@@ -326,10 +326,10 @@ p7.finally(() => {
 // p7
 
 const p8 = new MyPromise((resolve, reject) => {
-  setTimeout(reject.bind(null, "p8-err"), 1000);
+  setTimeout(reject.bind(null, 'p8-err'), 1000);
 });
 p8.finally(() => {
-  console.log("p8-finally");
+  console.log('p8-finally');
 }).catch((res) => {
   console.log(res);
 });
@@ -339,18 +339,18 @@ p8.finally(() => {
 // 这里实现的能捕获到，但原生的不能捕获到，会吃掉错误，所以原生的promise要写catch
 try {
   new MyPromise((resolve, reject) => {
-    throw new Error("err");
+    throw new Error('err');
   });
 } catch (e) {
-  console.error("捕获到了:", e); // 捕获到了: Error: err
+  console.error('捕获到了:', e); // 捕获到了: Error: err
 }
 
 try {
   new Promise((resolve, reject) => {
-    throw new Error("err"); // 报错：Uncaught (in promise)
+    throw new Error('err'); // 报错：Uncaught (in promise)
   });
 } catch (e) {
-  console.error("捕获到了:", e);
+  console.error('捕获到了:', e);
 }
 ```
 
@@ -443,13 +443,13 @@ function flat(arr) {
 ### 获取 url 参数
 
 ```javascript
-const url = "http://baidu.com?name=jack&age=45";
+const url = 'http://baidu.com?name=jack&age=45';
 
 // 获取对应参数
 function getUrlQuery(url, key) {
   return new URLSearchParams(new URL(url).search).get(key);
 }
-console.log(getUrlQuery(url, "name")); // jack
+console.log(getUrlQuery(url, 'name')); // jack
 
 // 获取所有参数
 function getUrlQueries(url) {
@@ -464,11 +464,84 @@ console.log(getUrlQueries(url)); // {name: 'jack', age: '45'}
 
 // 获取对应参数（正则）
 function getUrlQuery2(url, key) {
-  const reg = new RegExp(`(^|&)${key}=([^&]*)(&|$)`, "i");
+  const reg = new RegExp(`(^|&)${key}=([^&]*)(&|$)`, 'i');
 
   const match = new URL(url).search.slice(1).match(reg);
 
   if (match) return match[2];
 }
-console.log(getUrlQuery2(url, "name")); // jack
+console.log(getUrlQuery2(url, 'name')); // jack
 ```
+
+### JavaScript 代码的执行顺序
+
+```js
+async function testSometing() {
+  console.log('执行testSometing');
+  return 'testSometing';
+}
+async function testAsync() {
+  console.log('执行testAsync');
+  return Promise.resolve('hello async');
+}
+async function test() {
+  console.log('test start...');
+  const v1 = await testSometing();
+  console.log(v1);
+  const v2 = await testAsync();
+  console.log(v2);
+  console.log(v1, v2);
+}
+test();
+var promise = new Promise((resolve) => {
+  console.log('promise start...');
+  resolve('promise');
+});
+promise.then((val) => console.log(val));
+console.log('test end...');
+```
+
+这段代码的打印顺序如下：
+
+```js
+// 同步代码执行
+test start...
+
+执行testSometing
+
+promise start...
+
+test end...
+
+// 异步代码执行
+// 微任务队列处理（第一轮）
+// 当前微任务队列有两个任务：
+// 1、test() 中第一个 await 之后的代码（即 console.log(v1)）
+// 2、promise.then 的回调（即 val => console.log(val)）
+
+// 执行第一个微任务（来自 test()）
+testSometing
+
+// 执行 testAsync() 的同步代码
+执行testAsync
+
+// await 暂停 test() 的执行，后续代码变为新的微任务，进入队列。
+// 执行第二个微任务（来自 promise.then）
+promise
+
+hello async
+
+testSometing hello async
+```
+
+为什么 promise 在 testAsync 之后输出？
+
+根据事件循环的机制，微任务队列中的任务会一次性全部执行完毕，直到队列为空。所以当处理第一个微任务时，执行到第二个 await，会立即执行 testAsync 中的同步代码（打印"执行 testAsync"），然后将后面的代码加入微任务队列。此时，当前微任务执行完毕，继续处理下一个微任务（promise 的 then 回调），打印"promise"。然后继续处理剩下的微任务，即第二个 await 之后的代码，打印 v2 和最后的 log。
+
+核心机制总结：
+
+执行顺序优先级：同步代码 > 微任务（Promise.then、await） > 宏任务（如 setTimeout）。
+
+async/await 本质：await 会暂停函数执行，将后续代码包装为微任务。
+
+微任务队列先进先出：多个微任务按入队顺序依次执行。
