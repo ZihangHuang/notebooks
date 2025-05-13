@@ -372,3 +372,66 @@ o.x !== undefined; //false，属性存在，但值是undefined
 o.y !== undefined; //false
 o.toString !== undefined; //true
 ```
+
+## CommonJS 和 ESModule 规范对比
+
+1、CommonJS 模块输出的是值的拷贝，ES6 模块输出值的引用。
+
+ESModule 举例：输出的 a 是一个地址，这个值变化后面是跟着变化的。
+
+```js
+// test.js
+export let a = 1;
+export function plus() {
+  a++;
+}
+
+// entry.js
+import { a, plus } from './test.js';
+
+console.log(a); // 1
+plus();
+console.log(a); // 2
+```
+
+CommonJS 是对值是进行拷贝的，例如这里是对值 a 的一个拷贝
+
+```js
+// test.js
+let a = 1;
+
+exports.a = a;
+exports.plus = function () {
+  a++;
+};
+exports.get = function () {
+  return a;
+};
+
+// entry.js
+const { a, plus, get } = require('./test.js');
+console.log(a); // 1
+plus();
+console.log(a); // 1 -> 没有变化
+console.log(get()); // 2
+```
+
+2、CommonJS 模块运行时加载，ES6 模块是编译时输出接口
+
+CommonJS 加载的是一个对象（即 module.exports 属性），该对象只有在脚本运行完才会生成。而 ES6 模块不是对象，它的对外接口只是一种静态定义，在代码静态解析阶段就会生成。
+
+3、CommonJS 模块为同步加载，ES6 模块支持异步加载。
+
+```js
+// ESModule 可以通过promise的方式异步加载
+import('./test.js').then((mod) => {
+  console.log('mod', mod);
+});
+```
+
+4、CommonJS 中 this 是当前模块，ES6 模块的 this 是 undefined 。
+
+```js
+// commonjs
+console.log(this === module.exports);
+```
