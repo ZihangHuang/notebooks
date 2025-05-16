@@ -1,3 +1,9 @@
+git hooks 是在特定动作发生时触发的自定义脚本，存在仓库根目录中的.git/hooks/目录中。
+
+clone 代码库时，git 并不会上传.git 文件，所以也不会复制客户端钩子。在多人协作开发时会发现，git 钩子并没用啥作用。
+
+husky 的诞生是让 git hook 的使用变得更加简单
+
 ### 安装
 
 - `husky`
@@ -50,38 +56,38 @@ node_modules/.bin/commitlint --edit "$1"
 
 ```javascript
 module.exports = {
-  extents: ["@commitlint/config-conventional"],
+  extends: ['@commitlint/config-conventional'],
   rules: {
-    "body-leading-blank": [1, "always"],
-    "footer-leading-blank": [1, "always"],
-    "header-max-length": [2, "always", 72],
-    "scope-case": [2, "always", "lower-case"],
-    "subject-case": [
+    'body-leading-blank': [1, 'always'],
+    'footer-leading-blank': [1, 'always'],
+    'header-max-length': [2, 'always', 72],
+    'scope-case': [2, 'always', 'lower-case'],
+    'subject-case': [
       1,
-      "never",
-      ["sentence-case", "start-case", "pascal-case", "upper-case"],
+      'never',
+      ['sentence-case', 'start-case', 'pascal-case', 'upper-case'],
     ],
-    "subject-empty": [2, "never"],
-    "subject-full-stop": [2, "never", "."],
-    "type-case": [2, "always", "lower-case"],
-    "type-empty": [2, "never"],
-    "type-enum": [
+    'subject-empty': [2, 'never'],
+    'subject-full-stop': [2, 'never', '.'],
+    'type-case': [2, 'always', 'lower-case'],
+    'type-empty': [2, 'never'],
+    'type-enum': [
       2,
-      "always",
+      'always',
       [
-        "build",
-        "chore",
-        "ci",
-        "docs",
-        "feat",
-        "fix",
-        "perf",
-        "refactor",
-        "revert",
-        "release",
-        "style",
-        "test",
-        "improvement",
+        'build',
+        'chore',
+        'ci',
+        'docs',
+        'feat',
+        'fix',
+        'perf',
+        'refactor',
+        'revert',
+        'release',
+        'style',
+        'test',
+        'improvement',
       ],
     ],
   },

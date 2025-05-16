@@ -435,3 +435,39 @@ import('./test.js').then((mod) => {
 // commonjs
 console.log(this === module.exports);
 ```
+
+## prototype 和 `__proto__`
+
+JS 中引用类型有很多: Object, Function, Array, Date …;
+其中 Object, Function 是能被 typeof 识别的, 其余的本质上都是 Object 的衍生对象;
+Function 在 JS 中被单独视为一类, 是因为它在 JS 中是所谓的一等公民, JS 中没有类的概念, 其是通过函数来模拟类的;
+尽管 Function 被单独视为一类，但从形式上看，它还是一个 Object 对象，那么我们如何区分 Function 和 Object 呢？
+
+prototype 是用来区分 Function 和 Object 的关键:
+函数创建时, JS 会为函数自动添加 prototype 属性, 其值为一个带有 constructor 属性(指向对应的构造函数)的对象，这个对象就是我们所说的原型对象，除了 constructor 属性外，我们还可以在上面添加一些公用的属性和方法;
+
+```js
+Function.prototype = {
+  constructor: Function,
+  // ...
+};
+```
+
+而每个对象则都有一个内部属性[[Prototype]], 其用于存放该对象对应的原型对象。
+但是对象的内部属性[[Prototype]]是无法被直接访问和获取的，需要通过 `__proto__` , Object.getPrototypeOf / Object.setPrototypeOf 访问。
+
+### prototype 与 proto 的联系
+
+- `__proto__` 存在于所有对象上, prototype 只存在于函数上;
+- 每个对象都对应一个原型对象, 并从原型对象继承属性和方法, 该对应关系由 `__proto__` 实现(访问对象内部属性[[Prototype]]);
+- prototype 用于存储共享的属性和方法, 其作用主要体现在 new 创建对象时, 为 `__proto__` 构建一个对应的原型对象(设置实例对象的内部属性[[Prototype]]);
+- `__proto__` 不是 ECMAScript 语法规范的标准, 是浏览器厂商实现的一种访问和修改对象内部属性 [[Prototype]] 的访问器属性(getter/setter), 现常用 ECMAScript 定义的 Object.getPrototypeOf 和 Object.setPrototypeOf 代替;
+- prototype 是 ECMAScript 语法规范的标准;
+
+## 箭头函数与普通函数区别
+
+- 箭头函数是匿名函数，不能作为构造函数，不能使用 new
+- 箭头函数没有 prototype
+- 普通函数的 this 非严格模式下指向 window，严格模式指向 undefined。箭头函数两种模式下都继承自上一层作用域的 this。所以对象的方法不宜使用箭头函数，它的 this 是指向外层函数的，如果没有外层函数则指向全局对象。call()、apply()、bind()也不能改变箭头函数的 this。
+- 箭头函数不能使用 new.target 和 arguments，如果是套在普通函数内，则这两个都指向普通函数。
+- 对象的方法不宜使用箭头函数，它的是指向外层函数的，如果没有外层函数则指向全局对象。
