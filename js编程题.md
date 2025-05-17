@@ -1,4 +1,4 @@
-### 并发控制
+## 并发控制
 
 - 并行 n 个，n 个结束后才会执行以后的
 
@@ -79,7 +79,7 @@ const callback = () => {
 };
 ```
 
-### 深拷贝
+## 深拷贝
 
 ```javascript
 /**
@@ -117,7 +117,7 @@ function deepClone(obj = {}, map = new Map()) {
 }
 ```
 
-### Promise 的基础实现
+## Promise 的基础实现
 
 ```typescript
 type MyPromiseCb = (resolve?: Function, reject?: Function) => any;
@@ -354,7 +354,7 @@ try {
 }
 ```
 
-### 斐波那契
+## 斐波那契
 
 - 递归
 
@@ -432,7 +432,7 @@ function fib3(n) {
 }
 ```
 
-### 数组变扁平
+## 数组变扁平
 
 ```javascript
 function flat(arr) {
@@ -440,7 +440,7 @@ function flat(arr) {
 }
 ```
 
-### 获取 url 参数
+## 获取 url 参数
 
 ```javascript
 const url = 'http://baidu.com?name=jack&age=45';
@@ -473,7 +473,9 @@ function getUrlQuery2(url, key) {
 console.log(getUrlQuery2(url, 'name')); // jack
 ```
 
-### JavaScript 代码的执行顺序
+## JavaScript 代码的执行顺序
+
+### 题目 1
 
 ```js
 async function testSometing() {
@@ -545,3 +547,62 @@ testSometing hello async
 async/await 本质：await 会暂停函数执行，将后续代码包装为微任务。
 
 微任务队列先进先出：多个微任务按入队顺序依次执行。
+
+### 题目 2
+
+```js
+async function test() {
+  setTimeout(() => {
+    console.log(1);
+  }, 0);
+  await Promise.resolve().then(() => console.log(2));
+
+  new Promise((resolve) => {
+    console.log(3);
+    for (var i = 0; i < 10000; i++) {
+      i == 9999 && resolve();
+    }
+    console.log(4);
+  }).then(function () {
+    console.log(5);
+  });
+  await new Promise(() => console.log(6)).then(() => console.log(7));
+  console.log(8);
+}
+test();
+```
+
+输出：
+
+```js
+2
+
+3
+
+4
+
+
+6
+
+5
+
+Promise {<pending>}
+
+1
+```
+
+解析：
+
+1. 第一个是 setTimeout，里面的回调函数会打印 1。setTimeout 是一个宏任务，所以它的回调会被放入任务队列，等待当前执行栈清空后执行。这里延迟是 0，但不管怎么样，它都要等到所有同步任务和微任务完成后才会执行。
+
+2. 接下来是 await Promise.resolve().then(() => console.log(2));。当前同步执行到这一步时，会先处理 Promise.resolve().then 的回调，放到微任务队列，然后因为 await 的存在，后面的代码要等待这个 Promise resolve。不过因为 Promise 已经是 resolve 的状态，所以微任务队列中的回调会在当前宏任务执行完后立即执行。这时候，接下来的代码会暂停，直到这个微任务执行完毕，也就是执行.then 的回调，打印 2。
+
+3. 这时候，同步代码继续执行的是后面的 new Promise 部分。那接下来是 new Promise 里面的执行器函数会被立即执行，所以这里会先打印 3，然后循环 10000 次，当 i 等于 9999 的时候调用 resolve()，然后继续执行打印 4。所以这里同步执行的顺序是 3、4。然后这个 promise 的状态变为 resolved，所以它的.then 的回调（打印 5）会被放入微任务队列。
+
+4. 接下来是另一个 await，等待的是 new Promise(() => console.log(6)).then(() => console.log(7))。这里，new Promise 的执行器函数立即执行，打印 6。但执行器函数没有调用 resolve 或 reject，所以这个 promise 是 pending 状态。因此，.then 的回调（打印 7）不会执行，而且 await 会一直等待这个 promise 解决，所以后面的代码（打印 8）不会执行。
+
+当前代码执行到这里暂停，async 函数返回的 promise 一直处于 pending 状态。
+
+5. 在处理完当前微任务队列中的任务后（即打印 2 之后，接着处理后面的同步代码，此时第二个 promise 的 then 回调（打印 5）已经被加入微任务队列），所以此时微任务队列中有打印 5 的任务。处理微任务队列中的下一个任务，即打印 5。所以打印 5。
+
+6. 此时，微任务队列处理完毕。然后检查是否有宏任务。此时有一个 setTimeout 的回调（打印 1）在宏任务队列中，所以执行它，打印 1。
