@@ -597,7 +597,7 @@ Promise {<pending>}
 
 2. 接下来是 await Promise.resolve().then(() => console.log(2));。当前同步执行到这一步时，会先处理 Promise.resolve().then 的回调，放到微任务队列，然后因为 await 的存在，后面的代码要等待这个 Promise resolve。不过因为 Promise 已经是 resolve 的状态，所以微任务队列中的回调会在当前宏任务执行完后立即执行。这时候，接下来的代码会暂停，直到这个微任务执行完毕，也就是执行.then 的回调，打印 2。
 
-3. 这时候，同步代码继续执行的是后面的 new Promise 部分。那接下来是 new Promise 里面的执行器函数会被立即执行，所以这里会先打印 3，然后循环 10000 次，当 i 等于 9999 的时候调用 resolve()，然后继续执行打印 4。所以这里同步执行的顺序是 3、4。然后这个 promise 的状态变为 resolved，所以它的.then 的回调（打印 5）会被放入微任务队列。
+3. 这时候，同步代码继续执行的是后面的 new Promise 部分（注意，前面没有 await）。那接下来是 new Promise 里面的执行器函数会被立即执行，所以这里会先打印 3，然后循环 10000 次，当 i 等于 9999 的时候调用 resolve()，然后继续执行打印 4。所以这里同步执行的顺序是 3、4。然后这个 promise 的状态变为 resolved，因为前面没有带 await，所以它的.then 的回调（打印 5）会被放入微任务队列。
 
 4. 接下来是另一个 await，等待的是 new Promise(() => console.log(6)).then(() => console.log(7))。这里，new Promise 的执行器函数立即执行，打印 6。但执行器函数没有调用 resolve 或 reject，所以这个 promise 是 pending 状态。因此，.then 的回调（打印 7）不会执行，而且 await 会一直等待这个 promise 解决，所以后面的代码（打印 8）不会执行。
 
