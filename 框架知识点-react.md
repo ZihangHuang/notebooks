@@ -1,10 +1,67 @@
 ## React18 的变化总结
 
 - React17 之前，事件委托挂载在 document，React17 开始，变成挂载在渲染 react 树的根 dom 容器上，使得多版本并存成为可能。
-- React18 中，增加了新的 RootAPI：`ReactDOM.createRoot()`，以开启并发模式。
-- React17 之前，在 Promise 链、异步代码或者原生事件处理函数，不会合并多次的状态更新。React18 中，`ReactDOM.createRoot()`后，使用这些情况都会进行状态合并。如不想进行自动合并，可以使用`ReactDOM.flushSync()`。`flushSync`函数内部的多个 setState 仍然为批量更新，这样可以精准控制哪些不需要的批量更新。
+- React18 中，增加了新的 RootAPI：`ReactDOM.createRoot()`，以开启[并发模式](https://www.51cto.com/article/781259.html)。
 - React 事件池仅支持在 React 16 及更早版本中，在 React 17 已经不使用事件池。
 - 增加`startTransition`用于执行非紧急的状态更新。
+- React17 之前，在 Promise 链、异步代码或者原生事件处理函数，不会合并多次的状态更新。React18 中，`ReactDOM.createRoot()`后，使用这些情况都会进行状态合并。如不想进行自动合并，可以使用`ReactDOM.flushSync()`。`flushSync`函数内部的多个 setState 仍然为批量更新，这样可以精准控制哪些不需要的批量更新。
+
+React18 之前，仅在 React 合成事件、生命周期函数会合并多次状态更新，如
+ 
+```js
+const Demo = () => {
+  const [count, setCount] = useState(0);
+
+  useEffect(() => {
+    // 点击按钮，这里会输出一次，会批量处理
+    console.log('render');
+  });
+
+  const handleClick = () => {
+    setCount(1);
+    setCount(2);
+  };
+
+  return <button onClick={handleClick}></button>;
+};
+```
+
+在 setTimeout/setInterval、Promise.then、async/await、原生 DOM 事件，不会合并多次的状态更新：
+
+```js
+const Demo = () => {
+  const [count, setCount] = useState(0);
+
+  useEffect(() => {
+    // 点击按钮，这里会输出两次，不会批量处理
+    console.log('render');
+  });
+
+  const handleClick = () => {
+    setTimeout(() => {
+      setCount(1);
+      setCount(2);
+    }, 10);
+  };
+
+  return <button onClick={handleClick}></button>;
+};
+```
+
+在 React18 后，使用 createRoot() 挂载后，上面的场景都会自动合并多次的状态更新。
+
+不想自动合并多次的状态更新，使用`flushSync`强制 React 刷新 DOM：
+
+```js
+const handleClick = () => {
+  flushSync(() => {
+    setCount(1);
+  });
+  flushSync(() => {
+    setCount(2);
+  });
+};
+```
 
 ## React 内部机制优化更新效率
 
@@ -60,7 +117,7 @@ Fiber 可以理解为一种数据结构，Fiber 采用链表实现，每个 Virt
 
 React Fiber 一个更新过程被分为两个阶段：
 
-- render 阶段（可中断）：找到 Virtual DOM 中变化的部分，打上增删改的标记。
+- render(Reconciler) 阶段（可中断）：找到 Virtual DOM 中变化的部分，打上增删改的标记。
 - Commit 阶段（不可中断）：将变更的部分一次性更新到 DOM 上。
 
 - React Fiber 的更新过程是碎片化的，一次更新会分为 n 个任务片。每个片执行完成后就会把控制权交给调度器。
